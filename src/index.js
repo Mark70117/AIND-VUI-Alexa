@@ -4,9 +4,12 @@ var APP_ID = undefined; // can be replaced with your app ID if publishing
 var facts = require('./facts');
 var GET_FACT_MSG_EN = [
   "Here's your fact: ",
-  ' draws a blank for me. ',
-  "Here's a fact from a different year: ",
+  'Random fact: ',
+  'Some AI fact to think about: ',
+  'Facts are FUN: ',
+  'Did you know? ',
 ];
+
 // Test hooks - do not remove!
 exports.GetFactMsg = GET_FACT_MSG_EN;
 var APP_ID_TEST = 'mochatest'; // used for mocha tests to prevent warning
@@ -15,14 +18,27 @@ var APP_ID_TEST = 'mochatest'; // used for mocha tests to prevent warning
     TODO (Part 2) add messages needed for the additional intent
     TODO (Part 3) add reprompt messages as needed
 */
+const randomGetFactMessageEN = () =>
+  GET_FACT_MSG_EN[Math.floor(Math.random() * GET_FACT_MSG_EN.length)];
+
+var YEAR_DRAWS_A_BLANK_EN = [' draws a blank for me. '];
+var DIFFERENT_YEAR_FACT_EN = ["Here's a fact from a different year: "];
+var AGAIN_OR_STOP_EN = [
+  ' <break time="500ms" /> Say <p>Stop</p> to end conversation, or <p>A fact</p> to get another fact',
+];
+var REPROMPT_EN = [
+  " try saying 'a fact', or saying 'a fact from' a specific year'",
+];
 var languageStrings = {
   en: {
     translation: {
       FACTS: facts.FACTS_EN,
       SKILL_NAME: 'My History Facts', // OPTIONAL change this to a more descriptive name
-      GET_FACT_MESSAGE: GET_FACT_MSG_EN[0],
-      YEAR_DRAWS_A_BLANK: GET_FACT_MSG_EN[1],
-      DIFFERENT_YEAR_FACT: GET_FACT_MSG_EN[2],
+      GET_FACT_MESSAGE: randomGetFactMessageEN,
+      YEAR_DRAWS_A_BLANK: YEAR_DRAWS_A_BLANK_EN[0],
+      DIFFERENT_YEAR_FACT: DIFFERENT_YEAR_FACT_EN[0],
+      AGAIN_OR_STOP: AGAIN_OR_STOP_EN[0],
+      REPROMPT: REPROMPT_EN[0],
       HELP_MESSAGE:
         'You can say tell me a fact, or, you can say exit... What can I help you with?',
       HELP_REPROMPT: 'What can I help you with?',
@@ -71,8 +87,16 @@ var handlers = {
     var randomFact = randomPhrase(factArr);
 
     // Create speech output
-    var speechOutput = this.t('GET_FACT_MESSAGE') + randomFact;
-    this.emit(':tellWithCard', speechOutput, this.t('SKILL_NAME'), randomFact);
+    var speechOutput = this.t('GET_FACT_MESSAGE')() + randomFact;
+    speechOutput = speechOutput;
+
+    this.emit(
+      ':askWithCard',
+      speechOutput + this.t('AGAIN_OR_STOP'),
+      this.t('REPROMPT'),
+      this.t('SKILL_NAME'),
+      randomFact
+    );
   },
   GetNewYearFactIntent: function() {
     //TODO your code here
@@ -90,10 +114,11 @@ var handlers = {
         randomPhrase(factArr);
     }
     this.emit(
-      ':tellWithCard',
-      speechOutput,
+      ':askWithCard',
+      speechOutput + this.t('AGAIN_OR_STOP'),
+      this.t('REPROMPT'),
       this.t('SKILL_NAME'),
-      speechOutput
+      yearPhrase
     );
   },
   'AMAZON.HelpIntent': function() {
