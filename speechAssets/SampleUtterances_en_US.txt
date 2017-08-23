@@ -13,3 +13,18 @@ GetNewFactIntent give me trivia
 GetNewFactIntent tell me trivia
 GetNewFactIntent random fact
 GetNewFactIntent blow my mind
+GetNewYearFactIntent a fact from {FACT_YEAR}
+GetNewYearFactIntent a {FACT_YEAR} fact
+GetNewYearFactIntent tell me a {FACT_YEAR} fact
+GetNewYearFactIntent tell me a fact from {FACT_YEAR}
+GetNewYearFactIntent give me a {FACT_YEAR} fact
+GetNewYearFactIntent give me a fact from {FACT_YEAR}
+GetNewYearFactIntent another fact from {FACT_YEAR}
+GetNewYearFactIntent another {FACT_YEAR} fact
+GetNewYearFactIntent give me something from {FACT_YEAR}
+GetNewYearFactIntent what happened in {FACT_YEAR}
+GetNewYearFactIntent give me {FACT_YEAR} trivia
+GetNewYearFactIntent give me trivia from {FACT_YEAR}
+GetNewYearFactIntent a fun fact from {FACT_YEAR}
+GetNewYearFactIntent a fun {FACT_YEAR} fact
+GetNewYearFactIntent a random fact from {FACT_YEAR}
