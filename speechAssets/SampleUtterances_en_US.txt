@@ -2,3 +2,14 @@ GetNewFactIntent a fact
 GetNewFactIntent tell me a fact
 GetNewFactIntent give me a fact
 GetNewFactIntent give me something
+GetNewFactIntent spill the beans
+GetNewFactIntent surprise me
+GetNewFactIntent another fact 
+GetNewFactIntent to share a fact
+GetNewFactIntent to bring a fact
+GetNewFactIntent to enlighten me
+GetNewFactIntent to enrich me with a 
+GetNewFactIntent give me trivia
+GetNewFactIntent tell me trivia
+GetNewFactIntent random fact
+GetNewFactIntent blow my mind
