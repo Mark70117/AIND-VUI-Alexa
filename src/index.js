@@ -18,27 +18,34 @@ var APP_ID_TEST = 'mochatest'; // used for mocha tests to prevent warning
     TODO (Part 2) add messages needed for the additional intent
     TODO (Part 3) add reprompt messages as needed
 */
-const randomGetFactMessageEN = () =>
-  GET_FACT_MSG_EN[Math.floor(Math.random() * GET_FACT_MSG_EN.length)];
 
-var YEAR_DRAWS_A_BLANK_EN = [' draws a blank for me. '];
-var DIFFERENT_YEAR_FACT_EN = ["Here's a fact from a different year: "];
+var YEAR_DRAWS_A_BLANK_EN = [
+  ' draws a blank for me. ',
+  ' is not a year I know much about. ',
+];
+var DIFFERENT_YEAR_MSG_EN = [
+  "Here's a fact from a different year: ",
+  "So you don't go away empty handed: ",
+];
 var AGAIN_OR_STOP_EN = [
   ' <break time="500ms" /> Say <p>Stop</p> to end conversation, or <p>A fact</p> to get another fact',
+  ' <break time="500ms" /> Say <p>Stop</p> to end conversation, or <p>random fact</p> to get another fact',
+  ' <break time="500ms" /> Say <p>Stop</p> to end conversation, or <p>another fact</p> to get another fact',
 ];
 var REPROMPT_EN = [
   " try saying 'a fact', or saying 'a fact from' a specific year'",
+  " try saying 'give me trivia', or saying 'a fun fact from' a specific year'",
 ];
 var languageStrings = {
   en: {
     translation: {
       FACTS: facts.FACTS_EN,
       SKILL_NAME: 'My History Facts', // OPTIONAL change this to a more descriptive name
-      GET_FACT_MESSAGE: randomGetFactMessageEN,
-      YEAR_DRAWS_A_BLANK: YEAR_DRAWS_A_BLANK_EN[0],
-      DIFFERENT_YEAR_FACT: DIFFERENT_YEAR_FACT_EN[0],
-      AGAIN_OR_STOP: AGAIN_OR_STOP_EN[0],
-      REPROMPT: REPROMPT_EN[0],
+      GET_FACT_MESSAGE: GET_FACT_MSG_EN,
+      YEAR_DRAWS_A_BLANK: YEAR_DRAWS_A_BLANK_EN,
+      DIFFERENT_YEAR_MSG: DIFFERENT_YEAR_MSG_EN,
+      AGAIN_OR_STOP: AGAIN_OR_STOP_EN,
+      REPROMPT: REPROMPT_EN,
       HELP_MESSAGE:
         'You can say tell me a fact, or, you can say exit... What can I help you with?',
       HELP_REPROMPT: 'What can I help you with?',
@@ -87,13 +94,14 @@ var handlers = {
     var randomFact = randomPhrase(factArr);
 
     // Create speech output
-    var speechOutput = this.t('GET_FACT_MESSAGE')() + randomFact;
-    speechOutput = speechOutput;
-
+    var randomGetFactMessage = randomPhrase(this.t('GET_FACT_MESSAGE'));
+    var speechOutput = randomGetFactMessage + randomFact;
+    var randomAgainOrStop = randomPhrase(this.t('AGAIN_OR_STOP'));
+    var randomReprompt = randomPhrase(this.t('REPROMPT'));
     this.emit(
       ':askWithCard',
-      speechOutput + this.t('AGAIN_OR_STOP'),
-      this.t('REPROMPT'),
+      speechOutput + randomAgainOrStop,
+      randomReprompt,
       this.t('SKILL_NAME'),
       randomFact
     );
@@ -103,20 +111,26 @@ var handlers = {
     var factArr = this.t('FACTS');
     var year = this.event.request.intent.slots.FACT_YEAR.value;
     const yearPhrase = randomYearPhrase(factArr, year);
+    var randomAgainOrStop = randomPhrase(this.t('AGAIN_OR_STOP'));
+    var randomReprompt = randomPhrase(this.t('REPROMPT'));
     let speechOutput;
+
     if (yearPhrase !== '') {
-      speechOutput = this.t('GET_FACT_MESSAGE') + yearPhrase;
+      var randomGetFactMessage = randomPhrase(this.t('GET_FACT_MESSAGE'));
+      speechOutput = randomGetFactMessage + yearPhrase;
     } else {
+      var randomYearDrawsABlank = randomPhrase(this.t('YEAR_DRAWS_A_BLANK'));
+      var randomDifferentYearMsg = randomPhrase(this.t('DIFFERENT_YEAR_MSG'));
       speechOutput =
         year +
-        this.t('YEAR_DRAWS_A_BLANK') +
-        this.t('DIFFERENT_YEAR_FACT') +
+        randomYearDrawsABlank +
+        randomDifferentYearMsg +
         randomPhrase(factArr);
     }
     this.emit(
       ':askWithCard',
-      speechOutput + this.t('AGAIN_OR_STOP'),
-      this.t('REPROMPT'),
+      speechOutput + randomAgainOrStop,
+      randomReprompt,
       this.t('SKILL_NAME'),
       yearPhrase
     );
